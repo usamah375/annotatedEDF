@@ -2000,11 +2000,11 @@ function CreateTrace(col) {
     var trace = {
         x: [],
         y: [],
-
         marker: {
-            color: col
+            color: col,
         },
-        type: 'scatter'
+        type: 'scatter',
+        line: {width: 0.8}
     };
     return trace
 }
@@ -2415,10 +2415,16 @@ function readEEG() {
                 if ($('#_50Hz').data('_50Hz') == 1) {
                     channel = filter(channel, ch_dic[ch[0]].channel_sample_rates, '_50Hz');
                 };
-
+                var chmax = channel.reduce(function(a, b) {
+                    return Math.max(a, b);
+                });
+                var chmin = channel.reduce(function(a, b) {
+                    return Math.min(a, b);
+                });
+                
                 for (var i = 0; i < channel.length; i++) {
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
-                    EEG_plotdic[ch].y.push((channel[i] * invert_factor) + pos);
+                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*EEGplotamp/montage_EEG_list.length*1/chmax*0.65) + pos);
                 }
                 plotEEGdata.push(EEG_plotdic[ch]);
             }
