@@ -84,9 +84,11 @@ $(div).on('mouseup', function(e) {
 
     rect_start = rect_start.substring(0,12);
     rect_end = rect_end.substring(0,12);
-
-    console.log(rect_start);
-    console.log(rect_end);
+	
+    if ((parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) < tsec) || ( (parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) == tsec)&&(rect_start.length < 10) ) ){
+      rect_start = rect_start.substring(0,6) + tsec + ":000";
+    }
+    
     $( "div.ChDiv" ).each(function() {
         rect = (this).getBoundingClientRect();
         if ((rect.top>= lm_y && rect.bottom <= lm_y+height) || (rect.top <= lm_y && rect.bottom >= lm_y+height) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y-rect.top) < Math.abs(lm_y-rect.bottom))) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y+height-rect.top) > Math.abs(lm_y+height-rect.bottom)))){
