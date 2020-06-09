@@ -2004,7 +2004,10 @@ function CreateTrace(col) {
             color: col,
         },
         type: 'scatter',
-        line: {width: 0.8}
+        line: {width: 0.8,
+              shape: 'spline',
+              smoothing: 0.8
+              }
     };
     return trace
 }
