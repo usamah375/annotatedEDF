@@ -24,7 +24,7 @@ var last_mousex = last_mousey = 0;
 var mousex = mousey = 0;
 var mousedown = false;
 
-var csv_ar = [["Channel name","Start time","End time","Comment"]];
+var csv_ar = [["Start time","End time","Channel names","Comment"]];
 var csv_rows = 1;
 var csv_cols =3;
 var com = "No comment";
@@ -96,11 +96,12 @@ $(div).on('mouseup', function(e) {
     });
     if(window.confirm("Save selected region?\r\nNumber of channels = "+chArr.length+"\r\nStart: "+rect_start +"\r\nEnd: "+rect_end)){
       com = window.prompt("Comment about abnormality","No Comment");
-      for (chName in chArr){
-        new_row = [chArr[chName],rect_start,rect_end,com];
-
-        csv_ar.push(new_row);
+      var s = chArr[0]
+      for (i=1; i < chArr.length ; i++){
+        s = s.concat(' ',chArr[i])
       }
+      new_row = [rect_start,rect_end,s,com];
+      csv_ar.push(new_row);
     }
     console.log(csv_ar);
     ctx.clearRect(0,0,canvas.width,canvas.height); //clear canvas
@@ -128,6 +129,7 @@ $(div).on('mousemove', function(e) {
     //Output
 
 });
+
 document.getElementById("write").onclick = function() {writeToCSV(csv_ar)};
 document.getElementById("erase").onclick = function() {erase()};
 
