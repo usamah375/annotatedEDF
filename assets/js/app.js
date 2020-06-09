@@ -2422,9 +2422,9 @@ function readEEG() {
                     return Math.min(a, b);
                 });
                 
-                for (var i = 0; i < channel.length; i++) {
+                for (var i = 0; i < channel.length; i=i+13) {
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
-                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*EEGplotamp/montage_EEG_list.length*1/chmax*0.65) + pos);
+                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*EEGplotamp/montage_EEG_list.length*1/chmax*0.75) + pos);
                 }
                 plotEEGdata.push(EEG_plotdic[ch]);
             }
