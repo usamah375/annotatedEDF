@@ -27,7 +27,7 @@ $('.amp20s').data('amplitudeCalibration', 20);
 $('.amp30s').data('amplitudeCalibration', 30);
 $('.amp50s').data('amplitudeCalibration', 50);
 $('.amp100s').data('amplitudeCalibration', 100);
-$('#amp').data('amplitudeCalibration', 5);
+$('#amp').data('amplitudeCalibration', 30);
 $('#GO').data('tab', 1);
 $('#montage').data('montageCode', 'm1');
 $('.Montage1').data('montageNum', 1);
@@ -156,7 +156,7 @@ $('.amplitSelect').click(function() {
     };
     var amp = $(this).data('amplitudeCalibration');
     $('#amp').data("amplitudeCalibration", amp);
-    $('#ampNumber').text(amp + ' µV ');
+    $('#ampNumber').text((amp/100) + ' µV ');
     if (edf.fileName) {
         readEEG();
     };
@@ -337,7 +337,7 @@ document.onkeydown = function(e) {
                 edf.ampAutoChanging = 1;
                 $('#amp').data('amplitudeCalibration', amp);
                 $('.amplitSelect').prop("checked", false);
-                $('#ampNumber').text(amp + ' µV ');
+                $('#ampNumber').text((amp/100) + ' µV ');
                 $('.amp' + amp + 's').prop("checked", true);
                 edf.ampAutoChanging = 0;
                 if (edf.fileName) {
@@ -359,7 +359,7 @@ document.onkeydown = function(e) {
                 edf.ampAutoChanging = 1;
                 $('#amp').data('amplitudeCalibration', amp);
                 $('.amplitSelect').prop("checked", false);
-                $('#ampNumber').text(amp + ' µV ');
+                $('#ampNumber').text((amp/100) + ' µV ');
                 $('.amp' + amp + 's').prop("checked", true);
                 edf.ampAutoChanging = 0;
                 if (edf.fileName) {
@@ -2424,10 +2424,10 @@ function readEEG() {
                 var chmin = channel.reduce(function(a, b) {
                     return Math.min(a, b);
                 });
-                
+                //EEGplotamp/montage_EEG_list.length*1/chmax*0.75
                 for (var i = 0; i < channel.length; i=i+13) {
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
-                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*EEGplotamp/montage_EEG_list.length*1/chmax*0.75) + pos);
+                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*100) + pos);
                 }
                 plotEEGdata.push(EEG_plotdic[ch]);
             }
