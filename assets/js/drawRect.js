@@ -24,7 +24,7 @@ var last_mousex = last_mousey = 0;
 var mousex = mousey = 0;
 var mousedown = false;
 
-var csv_ar = [["Start time","End time","Channel names","Comment"]];
+var csv_ar = [["Gender","Age","Start time","End time","Channel names","Comment"]];
 var csv_rows = 1;
 var csv_cols =3;
 var com = "No comment";
@@ -57,7 +57,6 @@ $(div).on('mousedown', function(e) {
     tend = (document.getElementById('endWindowtime').innerHTML);
     dur = parseInt(document.getElementById('wd').innerHTML);
     tsec = parseFloat(tstart.charAt(6)+tstart.charAt(7));
-    console.log(tsec);
     tstart = tstart.substring(0,6);
 });
 
@@ -81,14 +80,16 @@ $(div).on('mouseup', function(e) {
     }
     rect_start = rect_start.substring(0,8) + ':' + rect_start.substring(9);
     rect_end = rect_end.substring(0,8) + ':' + rect_end.substring(9);
-
     rect_start = rect_start.substring(0,12);
     rect_end = rect_end.substring(0,12);
-	
+    console.log(rect_start)
+    console.log(rect_start.length)
     if ((parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) < tsec) || ( (parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) == tsec)&&(rect_start.length < 10) ) ){
       rect_start = rect_start.substring(0,6) + tsec + ":000";
     }
-    
+
+    console.log(rect_start);
+    console.log(rect_end);
     $( "div.ChDiv" ).each(function() {
         rect = (this).getBoundingClientRect();
         if ((rect.top>= lm_y && rect.bottom <= lm_y+height) || (rect.top <= lm_y && rect.bottom >= lm_y+height) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y-rect.top) < Math.abs(lm_y-rect.bottom))) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y+height-rect.top) > Math.abs(lm_y+height-rect.bottom)))){
@@ -102,7 +103,7 @@ $(div).on('mouseup', function(e) {
       for (i=1; i < chArr.length ; i++){
         s = s.concat(' ',chArr[i])
       }
-      new_row = [rect_start,rect_end,s,com];
+      new_row = ['','',rect_start,rect_end,s,com];
       csv_ar.push(new_row);
     }
     console.log(csv_ar);
@@ -131,20 +132,48 @@ $(div).on('mousemove', function(e) {
     //Output
 
 });
-
-document.getElementById("write").onclick = function() {writeToCSV(csv_ar)};
+var modal = document.getElementById("writeModal");
+var button = document.getElementById("acceptWrite");
+document.getElementById("write").onclick = function() {modalWrite()};
 document.getElementById("erase").onclick = function() {erase()};
+function modalWrite(){
+    modal.style.display = "block";
+}
+button.onclick = function() {
+  var us_age = $('input[name="getAge"]').val();
+  var us_gen
+  if (document.getElementById('gen1').checked) {
+    us_gen = document.getElementById('gen1').value;
+  }
+  if (document.getElementById('gen1').checked) {
+    us_gen = document.getElementById('gen1').value;
+  }
+  if (document.getElementById('gen1').checked) {
+    us_gen = document.getElementById('gen1').value;
+  }
+  modal.style.display = "none";
+  csv_ar[1][0] = us_gen;
+  csv_ar[1][1] = us_age;
+  writeToCSV(csv_ar)
+}
 
 function writeToCSV(ar){
-  let csvContent = "data:text/csv;charset=utf-8," + ar.map(e => e.join(",")).join("\n");
-  var encodedUri = encodeURI(csvContent);
-  var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "my_data.csv");
-  document.body.appendChild(link); // Required for FF
-  link.click();
-  erase();
-}
+
+    let csvContent = "data:text/csv;charset=utf-8," + ar.map(e => e.join(",")).join("\n");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_data.csv");
+    document.body.appendChild(link); // Required for FF
+    link.click();
+    erase();
+  }
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
 function erase(){
   if(window.confirm("Erase current labels?")){
     csv_ar = [["Channel name","Start time","End time","Comments"]];
