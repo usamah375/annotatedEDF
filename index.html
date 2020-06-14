@@ -18,6 +18,29 @@
        <div class = "myWrite" id = "write"> Write</div>
        <div class = "myWrite" id = "erase">Erase</div>
      </div>
+     <div class="myModal" id="writeModal">
+        <div class="modal-dialog" role="document">
+           <div class="modal-content">
+              <div class="modal-header">
+                 <h2 class="modal-title">Confirm write</h2>
+              </div>
+              <div class="modal-body">
+                <div> <h3>Enter age of subject</h3>
+                  <input type="number" name="getAge" placeholder="Enter age" autocomplete="off" > <br><br>
+                </div>
+                <div> <h3>Choose Gender</h3>
+                  <input type="radio" id="gen1" name="rate" value="Male"> Male <br>
+                  <input type="radio" id="gen2" name="rate" value="Female"> Female <br>
+                  <input type="radio" id="gen3" name="rate" value="Other" > Other <br>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div type="button" class="btn btn-primary" id="acceptWrite" data-dismiss="modal" style=" margin: 10px;width: 70px;">Ok  <span class="glyphicon glyphicon-ok"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       <div class="container plotDivs" style="width: 100%;height: 100%;background-color:#222222;">
          <div class=" row" style="background-color: #222222; margin-left:0px;margin-right: 0px;" >
             <nav class="navbar navbar-inverse" style="background-color: #222222;margin-bottom: 1px; padding-bottom: 5px; padding-right: 10px;width: 1300px;margin-left: auto ;margin-right: auto; border-color: #222222">
@@ -165,41 +188,41 @@
                         <div class="row" style=" margin-top: 10px;">
                            <div class="col-sm-4" style="padding-left: 0px;">
                               <li class="dropdown" style="margin-left: 15px;  ">
-                                 <div class="dropdown-toggle btn btn-success" id="amp" style="position: absolute;top: -10px; left: 2px;height: 35px;width: 100px;padding-left: 3px;" data-toggle="dropdown"  ><span >Amp: </span><span id="ampNumber">5 µV </span><span class="caret"></span></div>
+                                 <div class="dropdown-toggle btn btn-success" id="amp" style="position: absolute;top: -10px; left: 2px;height: 35px;width: 100px;padding-left: 3px;" data-toggle="dropdown"  ><span >Amp: </span><span id="ampNumber">0.3 µV </span><span class="caret"></span></div>
                                  <ul class="dropdown-menu" style="position: absolute;left: -30px;">
                                     <div class="btn-group" data-toggle="buttons">
                                        <li style="padding-left: 30px; "><label class="btn btn-success active amplitSelect amp1s" style="width: 100px;">
-                                          <input type="radio" name="amplitude" class="amp1s" autocomplete="off" >1 µV </label>
+                                          <input type="radio" name="amplitude" class="amp1s" autocomplete="off" >0.01 µV </label>
                                        </li>
                                        <li style="padding-left: 30px; "><label class="btn btn-success active amplitSelect amp2s" style="width: 100px;">
-                                          <input type="radio" name="amplitude" class="amp2s" autocomplete="off" >2 µV </label>
+                                          <input type="radio" name="amplitude" class="amp2s" autocomplete="off" >0.02 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp3s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp3s" autocomplete="off" >3 µV </label>
+                                          <input type="radio" name="amplitude" class="amp3s" autocomplete="off" >0.03 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp5s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp5s" autocomplete="off" checked >5 µV </label>
+                                          <input type="radio" name="amplitude" class="amp5s" autocomplete="off"  >0.05 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp7s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp7s" autocomplete="off" >7 µV </label>
+                                          <input type="radio" name="amplitude" class="amp7s" autocomplete="off" >0.07 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp10s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp10s" autocomplete="off" >10 µV </label>
+                                          <input type="radio" name="amplitude" class="amp10s" autocomplete="off" >0.10 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp15s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp15s" autocomplete="off" >15 µV </label>
+                                          <input type="radio" name="amplitude" class="amp15s" autocomplete="off" >0.15 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp20s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp20s" autocomplete="off" >20 µV </label>
+                                          <input type="radio" name="amplitude" class="amp20s" autocomplete="off" >0.20 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp30s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp30s" autocomplete="off" >30 µV </label>
+                                          <input type="radio" name="amplitude" class="amp30s" autocomplete="off" checked>0.30 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp50s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp50s" autocomplete="off" >50 µV </label>
+                                          <input type="radio" name="amplitude" class="amp50s" autocomplete="off" >0.50 µV </label>
                                        </li>
                                        <li style="padding-left: 30px;"><label class="btn btn-success active amplitSelect amp100s" style="width: 100px">
-                                          <input type="radio" name="amplitude" class="amp100s" autocomplete="off" >100 µV </label>
+                                          <input type="radio" name="amplitude" class="amp100s" autocomplete="off" >1.00 µV </label>
                                        </li>
                                     </div>
                                  </ul>
@@ -282,6 +305,7 @@
                   </div>
                </div>
             </div>
+
             <div class="modal fade" id="SettingsModal" >
                <div class="modal-dialog" role="document">
                   <div class="modal-content">
