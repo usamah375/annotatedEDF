@@ -82,14 +82,12 @@ $(div).on('mouseup', function(e) {
     rect_end = rect_end.substring(0,8) + ':' + rect_end.substring(9);
     rect_start = rect_start.substring(0,12);
     rect_end = rect_end.substring(0,12);
-    console.log(rect_start)
-    console.log(rect_start.length)
+
     if ((parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) < tsec) || ( (parseFloat(rect_start.charAt(6)+rect_start.charAt(7)) == tsec)&&(rect_start.length < 10) ) ){
       rect_start = rect_start.substring(0,6) + tsec + ":000";
     }
 
-    console.log(rect_start);
-    console.log(rect_end);
+
     $( "div.ChDiv" ).each(function() {
         rect = (this).getBoundingClientRect();
         if ((rect.top>= lm_y && rect.bottom <= lm_y+height) || (rect.top <= lm_y && rect.bottom >= lm_y+height) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y-rect.top) < Math.abs(lm_y-rect.bottom))) || ((lm_y>=rect.top && lm_y <=rect.bottom) && (Math.abs(lm_y+height-rect.top) > Math.abs(lm_y+height-rect.bottom)))){
@@ -97,16 +95,22 @@ $(div).on('mouseup', function(e) {
           chArr.push(chName);
         }
     });
-    if(window.confirm("Save selected region?\r\nNumber of channels = "+chArr.length+"\r\nStart: "+rect_start +"\r\nEnd: "+rect_end)){
-      com = window.prompt("Comment about abnormality","No Comment");
-      var s = chArr[0]
-      for (i=1; i < chArr.length ; i++){
-        s = s.concat(' ',chArr[i])
+    if (rect_start!=rect_end && chArr.length!=0){
+      if(window.confirm("Save selected region?\r\nNumber of channels = "+chArr.length+"\r\nStart: "+rect_start +"\r\nEnd: "+rect_end)){
+        com = window.prompt("Comment about abnormality","No Comment");
+        var s = chArr[0]
+        for (i=1; i < chArr.length ; i++){
+          s = s.concat(' ',chArr[i])
+        }
+        new_row = ['','',rect_start,rect_end,s,com];
+        csv_ar.push(new_row);
       }
-      new_row = ['','',rect_start,rect_end,s,com];
-      csv_ar.push(new_row);
     }
-    console.log(csv_ar);
+    else {
+      alert("No region was selected. Please click ONCE outside the drawing area and try again")
+    }
+
+
     ctx.clearRect(0,0,canvas.width,canvas.height); //clear canvas
     chArr = [];
 });
