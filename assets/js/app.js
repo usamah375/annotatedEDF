@@ -16,18 +16,18 @@ $("#montage_EEG_list").data('montage', []);
 $("#montage_EKG_list").data('montage', []);
 $("#montage_other_list").data('montage', []);
 $("#montage").data('plotMontage', 1);
-$('.amp1s').data('amplitudeCalibration', 1);
-$('.amp2s').data('amplitudeCalibration', 2);
-$('.amp3s').data('amplitudeCalibration', 3);
-$('.amp5s').data('amplitudeCalibration', 5);
-$('.amp7s').data('amplitudeCalibration', 7);
-$('.amp10s').data('amplitudeCalibration', 10);
-$('.amp15s').data('amplitudeCalibration', 15);
-$('.amp20s').data('amplitudeCalibration', 20);
-$('.amp30s').data('amplitudeCalibration', 30);
-$('.amp50s').data('amplitudeCalibration', 50);
-$('.amp100s').data('amplitudeCalibration', 100);
-$('#amp').data('amplitudeCalibration', 30);
+$('.amp1s').data('amplitudeCalibration', 0.01);
+$('.amp2s').data('amplitudeCalibration', 0.02);
+$('.amp3s').data('amplitudeCalibration', 0.03);
+$('.amp5s').data('amplitudeCalibration', 0.05);
+$('.amp7s').data('amplitudeCalibration', 0.07);
+$('.amp10s').data('amplitudeCalibration', 0.10);
+$('.amp15s').data('amplitudeCalibration', 0.15);
+$('.amp20s').data('amplitudeCalibration', 0.20);
+$('.amp30s').data('amplitudeCalibration', 0.30);
+$('.amp50s').data('amplitudeCalibration', 0.50);
+$('.amp100s').data('amplitudeCalibration', 1.00);
+$('#amp').data('amplitudeCalibration', 0.30);
 $('#GO').data('tab', 1);
 $('#montage').data('montageCode', 'm1');
 $('.Montage1').data('montageNum', 1);
@@ -43,7 +43,7 @@ $('#annotaionsTableScrol').css('height', ($(window).height() - 222));
 $('#setting_CNW_slider').data('position', 0);
 var ch_dic = {};
 var edf = {};
-
+var call = null;
 var montage = {
     'm1': {
         'EEG': [],
@@ -95,7 +95,7 @@ function sizeChanged(argument) {
         readEEG();
     }
 }
-
+var myEEGlist = [];
 function scroll_marker_width_manager() {
     const window_duration = $('#windowduratin').data("window_duration");
     var scroll_marker_width = (parseFloat($('#rangeinput').width()) * parseFloat($('#windowduratin').data("window_duration"))) / edf.file_duration;
@@ -156,7 +156,7 @@ $('.amplitSelect').click(function() {
     };
     var amp = $(this).data('amplitudeCalibration');
     $('#amp').data("amplitudeCalibration", amp);
-    $('#ampNumber').text((amp/100) + ' µV ');
+    $('#ampNumber').text((amp) + ' µV ');
     if (edf.fileName) {
         readEEG();
     };
@@ -330,14 +330,14 @@ document.onkeydown = function(e) {
             }, 500);
         } else if (key == 38) {
             var amp = $('#amp').data('amplitudeCalibration');
-            var ampList = [1, 2, 3, 5, 7, 10, 15, 20, 30, 50, 100];
+            var ampList = [0.01, 0.02, 0.03, 0.05, 0.07, 0.10, 0.15, 0.20, 0.30, 0.50, 1.00];
             var ampind = ampList.indexOf(amp);
             if (ampind > 0) {
                 amp = ampList[ampind - 1];
                 edf.ampAutoChanging = 1;
                 $('#amp').data('amplitudeCalibration', amp);
                 $('.amplitSelect').prop("checked", false);
-                $('#ampNumber').text((amp/100) + ' µV ');
+                $('#ampNumber').text((amp) + ' µV ');
                 $('.amp' + amp + 's').prop("checked", true);
                 edf.ampAutoChanging = 0;
                 if (edf.fileName) {
@@ -352,14 +352,14 @@ document.onkeydown = function(e) {
             }, 500);
         } else if (key == 40) {
             var amp = $('#amp').data('amplitudeCalibration');
-            var ampList = [1, 2, 3, 5, 7, 10, 15, 20, 30, 50, 100];
+            var ampList = [0.01, 0.02, 0.03, 0.05, 0.07, 0.10, 0.15, 0.20, 0.30, 0.50, 1.00];
             var ampind = ampList.indexOf(amp);
             if (ampind < ampList.length - 1) {
                 amp = ampList[ampind + 1];
                 edf.ampAutoChanging = 1;
                 $('#amp').data('amplitudeCalibration', amp);
                 $('.amplitSelect').prop("checked", false);
-                $('#ampNumber').text((amp/100) + ' µV ');
+                $('#ampNumber').text((amp) + ' µV ');
                 $('.amp' + amp + 's').prop("checked", true);
                 edf.ampAutoChanging = 0;
                 if (edf.fileName) {
@@ -579,6 +579,7 @@ $('#next_sec').on('click', function() {
         datetime = edf.date_time.clone();
         var end_date_time = datetime.add(t_end, 'seconds');
         $('#endWindowtime').text(end_date_time.format("HH:mm:ss"));
+        call = 'b';
         readEEG();
     } catch (err) {};
 })
@@ -600,6 +601,7 @@ $('#previous_sec').on('click', function() {
         datetime = edf.date_time.clone();
         var end_date_time = datetime.add(t_end, 'seconds');
         $('#endWindowtime').text(end_date_time.format("HH:mm:ss"));
+        call = 'd';
         readEEG();
     } catch (err) {};
 })
@@ -627,6 +629,7 @@ function nextPage() {
         datetime = edf.date_time.clone();
         var end_date_time = datetime.add(t_end, 'seconds');
         $('#endWindowtime').text(end_date_time.format("HH:mm:ss"));
+        call = 'a';
         readEEG();
     } catch (err) {};
 }
@@ -649,6 +652,7 @@ function previousPage() {
         datetime = edf.date_time.clone();
         var end_date_time = datetime.add(t_end, 'seconds');
         $('#endWindowtime').text(end_date_time.format("HH:mm:ss"));
+        call = 'c';
         readEEG();
     } catch (err) {};
 }
@@ -801,8 +805,12 @@ function Analysis_Header_Second_Section(data) {
             var ht = $('#montagbtngroup').height();
             var li, Chlbl, Chlb2;
             for (i in edf.channel_labels) {
-                if (edf.channel_labels[i] != '' && edf.channel_labels[i] != "EDF Annotations") {
 
+                if (edf.channel_labels[i] != '' && edf.channel_labels[i] != "EDF Annotations") {
+                    if (i<19){
+                      var t = [edf.channel_labels[i]];
+                      myEEGlist.push(t);
+                    }
                     li = $('<li style="padding: 0px; margin:0px;" class="montageWindowName"></li>');
                     li.css('margin-top', 5);
                     li.css('margin-bottom', 5);
@@ -1032,7 +1040,7 @@ function sortAnnotaionTable(x, dir) {
         const montage_EEG_list = $("#montage_EEG_list").data('montage');
         const montage_EKG_list = $("#montage_EKG_list").data('montage');
         const montage_other_list = $("#montage_other_list").data('montage');
-        const EEGlength = montage_EEG_list.length + montage_EKG_list.length + montage_other_list.length;
+        const EEGlength = myEEGlist.length + montage_EKG_list.length + montage_other_list.length;
 
         for (i in edf.Annotations.annotations_list) {
             row_info = edf.Annotations.annotations_list[i]
@@ -1336,7 +1344,7 @@ function Assess_montage(data) {
         const montage_EKG_list = choosenMontage['EKG']
         const montage_other_list = choosenMontage['Other']
 
-        const EEGlength = montage_EEG_list.length + montage_EKG_list.length + montage_other_list.length;
+        const EEGlength = myEEGlist.length + montage_EKG_list.length + montage_other_list.length;
         if (EEGlength == 0) {
 
             $('#montageModal').modal('show');
@@ -2018,17 +2026,49 @@ function scale(int16_data) {
     var scale = ch_dic[edf.ch].channel_scaling_factors;
     return (scale * (int16_data - d_min) + p_min);
 }
-
+var samp_start = 0;
+var samp_left = 0;
+var smp_left = 0;
+var samp_per_second = 0;
 function readEEG() {
     $('.showAtbegining').css('visibility', 'visible');
     $('#scroll_marker').css('left', (parseInt((parseInt($('#scroll_body').width()) * edf.t_beg) / edf.file_duration)));
+    var prev_samp_start = samp_start;
+    switch (call){
+      case 'a': //next page
+        if (samp_left!=0){
+
+          samp_start = samp_left;
+        }
+        break;
+      case 'b': // next second
+        if (smp_left!=0){
+
+          samp_start = smp_left;
+        }
+        break;
+      case 'c': //prev page
+        if (samp_start!=0){
+          var len = samp_start + prev_length;
+          samp_start = len%13;
+        }
+        break;
+      case 'd': //prev second
+        if (samp_start!=0){
+          var len = samp_start+samp_per_second;
+          samp_start = len%13;
+        }
+        break;
+      default:
+
+    }
 
     const choosenMontage = montage[$('#montage').data('montageCode')];
     const montage_EEG_list = choosenMontage['EEG']
     const montage_EKG_list = choosenMontage['EKG']
     const montage_other_list = choosenMontage['Other']
 
-    const EEGlength = montage_EEG_list.length + montage_EKG_list.length + montage_other_list.length;
+    const EEGlength = myEEGlist.length + montage_EKG_list.length + montage_other_list.length;
     if (EEGlength == 0) {
         $("#EEGDiv").remove();
         $("#EKGDiv").remove();
@@ -2054,7 +2094,7 @@ function readEEG() {
         annotaionTextHieght = 40;
     }
     const EEGchDivHieght = ($(window).height() - 115 - annotaionTextHieght - timeScaleHieght * 2) / EEGlength; //113
-    const EEGdivHieght = EEGchDivHieght * montage_EEG_list.length;
+    const EEGdivHieght = EEGchDivHieght * myEEGlist.length;
     var ampfactor = $('#amp').data("amplitudeCalibration");
     var EEGplotamp = EEGdivHieght * ampfactor * 0.26;
     var EKGdivHieght = EEGchDivHieght * montage_EKG_list.length;
@@ -2089,23 +2129,25 @@ function readEEG() {
     var window_duration = $('#windowduratin').data("window_duration");
     var t_beg = edf.t_beg;
     var t_end = t_beg + $('#windowduratin').data("window_duration");
-    if (t_beg >= 2) {
-        t_beg = t_beg - 2;
-        edf.initial_condition_start = -2;
-    } else {
+      edf.initial_condition_end = 0;
         edf.initial_condition_start = 0;
-    };
-    if (t_end <= edf.file_duration - 3) {
-        t_end = t_end + 2;
-        edf.initial_condition_end = -2;
-    } else {
-        edf.initial_condition_end = 0;
-    }
-    window_duration = window_duration + (-1 * (edf.initial_condition_start + edf.initial_condition_end));
+  //  if (t_beg >= 2) {
+    //    t_beg = t_beg - 2;
+      //  edf.initial_condition_start = -2;
+  //  } else {
+    //    edf.initial_condition_start = 0;
+    //};
+    //if (t_end <= edf.file_duration - 3) {
+      //  t_end = t_end + 2;
+      //  edf.initial_condition_end = -2;
+    //} else {
+      //  edf.initial_condition_end = 0;
+    //}
+    //window_duration = window_duration + (-1 * (edf.initial_condition_start + edf.initial_condition_end));
     const hp = 30;
     var EEG_plotdic = {};
-    for (i in montage_EEG_list) {
-        EEG_plotdic[montage_EEG_list[i]] = new CreateTrace("#000000");
+    for (i in myEEGlist) {
+        EEG_plotdic[myEEGlist[i]] = new CreateTrace("#000000");
     }
     var plotEEGdata = [];
     var records_in_window = Math.ceil(window_duration / edf.record_duration) + 1;
@@ -2264,7 +2306,7 @@ function readEEG() {
         var dotedTimLineslist = dotedTimLines[$('#windowduratin').data("window_duration")];
 
         var pos = EEGplotamp;
-        var seg = EEGplotamp / (montage_EEG_list.length + 1);
+        var seg = EEGplotamp / (myEEGlist.length + 1);
 
         var Trace = new CreateTrace("#000000")
         plotdata = [Trace];
@@ -2397,8 +2439,9 @@ function readEEG() {
             staticPlot: true,
         });
 
-        for (i in montage_EEG_list) {
-            ch = montage_EEG_list[i];
+        for (i in myEEGlist) {
+            ch = myEEGlist[i];
+
             ch_in_montage = 1;
             for (c in ch) {
                 if (!edf.channel_labels.includes(ch[c])) {
@@ -2425,11 +2468,21 @@ function readEEG() {
                     return Math.min(a, b);
                 });
                 //EEGplotamp/montage_EEG_list.length*1/chmax*0.75
-                for (var i = 0; i < channel.length; i=i+13) {
+                if (i==0){
+                  prev_length = channel.length;
+                  samp_per_second = channel.length / window_duration;
+                  samp_left = 13-(channel.length-samp_start)%13;
+                  smp_left = 13 - ((channel.length / (window_duration))-samp_start)%13;
+                }
+                console.log(samp_start);
+                for (var i = samp_start; i < channel.length; i+=13) {
+
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
-                    EEG_plotdic[ch].y.push((channel[i] * invert_factor*100) + pos);
+                    EEG_plotdic[ch].y.push((channel[i] * invert_factor) + pos);
+
                 }
                 plotEEGdata.push(EEG_plotdic[ch]);
+
             }
         }
 
@@ -2551,10 +2604,10 @@ function readEEG() {
         Plotly.plot('EEGDiv', plotEEGdata, layout, {
             staticPlot: true,
         });
-        for (i in montage_EEG_list) {
+        for (i in myEEGlist) {
             _ = parseInt(i) + 1;
-            if ($("#montage").data('plotMontage') == 1) {
-                chDiv = $("<div class='ChDiv'><span>" + montage_EEG_list[i].join("-") + "</span></div>");
+
+                chDiv = $("<div class='ChDiv'><span>" + myEEGlist[i].join("-") + "</span></div>");
                 chDiv.css("height", EEGchDivHieght);
                 if (EEGchDivHieght > 200) {
                     chDiv.css("padding-top", EEGchDivHieght / 2);
@@ -2566,8 +2619,8 @@ function readEEG() {
                 chDiv.css("color", '#222222');
                 chDiv.css("font-weight", 'bold');
                 ch_in_montage = 1;
-                for (c in montage_EEG_list[i]) {
-                    if (!edf.channel_labels.includes(montage_EEG_list[i][c])) {
+                for (c in myEEGlist[i]) {
+                    if (!edf.channel_labels.includes(myEEGlist[i][c])) {
                         ch_in_montage = 0;
                     }
                 }
@@ -2578,7 +2631,7 @@ function readEEG() {
                 }
 
                 $('#EEGchName').append(chDiv);
-            };
+
             domin = domin - seg;
         };
 
