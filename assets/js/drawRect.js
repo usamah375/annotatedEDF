@@ -24,12 +24,12 @@ var last_mousex = last_mousey = 0;
 var mousex = mousey = 0;
 var mousedown = false;
 
-var csv_ar = [["Gender","Age","Start time","End time","Channel names","Comment"]];
+var csv_ar = [["Gender","Age","File Start","Start time","End time","Channel names","Comment"]];
 var csv_rows = 1;
 var csv_cols =3;
 var com = "No comment";
 var chArr = [];
-
+var myStart = "";
 function getMousePos(div, evt) {
     var rect = div.getBoundingClientRect();
     return {
@@ -102,7 +102,7 @@ $(div).on('mouseup', function(e) {
         for (i=1; i < chArr.length ; i++){
           s = s.concat(' ',chArr[i])
         }
-        new_row = ['','',rect_start,rect_end,s,com];
+        new_row = ['','','',rect_start,rect_end,s,com];
         csv_ar.push(new_row);
       }
     }
@@ -162,7 +162,7 @@ button.onclick = function() {
 }
 
 function writeToCSV(ar){
-
+    ar[1][2] = myStart;
     let csvContent = "data:text/csv;charset=utf-8," + ar.map(e => e.join(",")).join("\n");
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
@@ -180,6 +180,6 @@ function writeToCSV(ar){
 
 function erase(){
   if(window.confirm("Erase current labels?")){
-    csv_ar = [["Channel name","Start time","End time","Comments"]];
+    csv_ar = [["Gender","Age","File Start","Start time","End time","Channel names","Comment"]];
   }
 }
