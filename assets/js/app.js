@@ -44,6 +44,7 @@ $('#setting_CNW_slider').data('position', 0);
 var ch_dic = {};
 var edf = {};
 var call = null;
+var myStart = "";
 var montage = {
     'm1': {
         'EEG': [],
@@ -92,6 +93,7 @@ function sizeChanged(argument) {
     if (edf.fileName) {
         $("#montage").data('plotMontage', 1);
         plot_table_width_rearrange();
+        call = 'e';
         readEEG();
     }
 }
@@ -158,6 +160,7 @@ $('.amplitSelect').click(function() {
     $('#amp').data("amplitudeCalibration", amp);
     $('#ampNumber').text((amp) + ' µV ');
     if (edf.fileName) {
+        call = 'e';
         readEEG();
     };
 });
@@ -434,6 +437,7 @@ $('#DCbtn').click(function() {
         $('#CDspan').removeClass('glyphicon-check');
         $('#CDspan').addClass('glyphicon-unchecked');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     } else {
@@ -442,6 +446,7 @@ $('#DCbtn').click(function() {
         $('#CDspan').removeClass('glyphicon-unchecked');
         $('#CDspan').addClass('glyphicon-check');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     }
@@ -454,6 +459,7 @@ $('#_60Hz').click(function() {
         $('#60span').removeClass('glyphicon-check');
         $('#60span').addClass('glyphicon-unchecked');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     } else {
@@ -462,6 +468,7 @@ $('#_60Hz').click(function() {
         $('#60span').removeClass('glyphicon-unchecked');
         $('#60span').addClass('glyphicon-check');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     }
@@ -474,6 +481,7 @@ $('#_50Hz').click(function() {
         $('#50span').removeClass('glyphicon-check');
         $('#50span').addClass('glyphicon-unchecked');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     } else {
@@ -482,6 +490,7 @@ $('#_50Hz').click(function() {
         $('#50span').removeClass('glyphicon-unchecked');
         $('#50span').addClass('glyphicon-check');
         if (edf.fileName) {
+            call = 'e';
             readEEG();
         };
     }
@@ -2030,9 +2039,84 @@ var samp_start = 0;
 var samp_left = 0;
 var smp_left = 0;
 var samp_per_second = 0;
+var iter = 0;
+diff =[0,0,0];
+var t_modal = document.getElementById("timeModal");
+var t_button = document.getElementById("acceptTime");
+
+t_button.onclick = function(){
+  var myHH = $('input[id = "myHH"]').val();
+  var myMM = $('input[id = "myMM"]').val();
+  var mySS = $('input[id = "mySS"]').val();
+
+  datetime_temp = edf.date_time.clone();
+  var t_beg_temp = edf.t_beg;
+  var st_date_time_temp = datetime_temp.add(t_beg_temp, 'seconds');
+
+  var stHH = parseInt(st_date_time_temp.format("HH"));
+  var stMM = parseInt(st_date_time_temp.format("mm"));
+  var stSS = parseInt(st_date_time_temp.format("ss"));
+
+  diff = [myHH-stHH,myMM-stMM,mySS-stSS];
+  if (myHH<10){  myHH = '0' + new_h;}
+  if (myMM<10){  myMM = '0' + new_m;}
+  if (mySS<10){  mySS = '0' + new_s;}
+  myStart = myHH + ':' + myMM + ':' + mySS;
+  t_modal.style.display = "none";
+  readEEG();
+}
+function addTime(time,diff){
+  t =0;
+  new_s = diff[2]+parseInt(time.charAt(6)+time.charAt(7));
+  if (new_s<0){
+    new_s = 60 + new_s;
+    t = -1;
+  }
+  else if (new_s>59) {
+    new_s = new_s-60;
+    t=1;
+  }
+  new_m = diff[1]+parseInt(time.charAt(3)+time.charAt(4)) + t;
+  if (new_m<0){
+    new_m = 60 + new_m;
+    t = -1;
+  }
+  else if (new_m>59) {
+    new_m = new_m-60;
+    t=1;
+  }
+  new_h = diff[0]+parseInt(time.charAt(0)+time.charAt(1)) + t;
+  if (new_h<0){
+    new_h = 24 + new_h;
+  }
+  else if (new_h>23) {
+    new_h = new_h-24;
+  }
+  if (new_h<10){  new_h = '0' + new_h;}
+  if (new_m<10){  new_m = '0' + new_m;}
+  if (new_s<10){  new_s = '0' + new_s;}
+  return (new_h + ':' + new_m + ':' + new_s);
+}
 function readEEG() {
     $('.showAtbegining').css('visibility', 'visible');
     $('#scroll_marker').css('left', (parseInt((parseInt($('#scroll_body').width()) * edf.t_beg) / edf.file_duration)));
+    if(iter == 0){
+      datetime_temp = edf.date_time.clone();
+      var t_beg_temp = edf.t_beg;
+      var st_date_time_temp = datetime_temp.add(t_beg_temp, 'seconds');
+
+      $('#myHH').val(st_date_time_temp.format("HH"));
+      $('#myMM').val(st_date_time_temp.format("mm"));
+      $('#mySS').val(st_date_time_temp.format("ss"));
+      t_modal.style.display = "block";
+      iter =1;
+    }
+    if (diff != [0,0,0] && call != 'e'){
+      var t_start = $('#startWindowtime').text();
+      var t_end = $('#endWindowtime').text();
+      $('#startWindowtime').text(addTime(t_start,diff));
+      $('#endWindowtime').text(addTime(t_end,diff));
+    }
     var prev_samp_start = samp_start;
     switch (call){
       case 'a': //next page
@@ -2062,7 +2146,7 @@ function readEEG() {
       default:
 
     }
-
+    call = " ";
     const choosenMontage = montage[$('#montage').data('montageCode')];
     const montage_EEG_list = choosenMontage['EEG']
     const montage_EKG_list = choosenMontage['EKG']
