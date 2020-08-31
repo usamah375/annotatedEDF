@@ -18,6 +18,28 @@
        <div class = "myWrite" id = "write"> Write</div>
        <div class = "myWrite" id = "erase">Erase</div>
      </div>
+     <div class="myModal" id="timeModal">
+        <div class="modal-dialog" role="document">
+           <div class="modal-content">
+              <div class="modal-header">
+                 <h2 class="modal-title">Update start time</h2>
+              </div>
+              <div class="modal-body">
+                <div> <h3>Enter preferred starting time. Default is displayed</h3>
+                  <div style = "border:2px solid #c3c3c3 ; padding: 0px;margin: 0px; width: 142px; border-radius: 5px;padding-left: 2px;">
+                    <input type="number" pattern ="[0-9]*" id = "myHH" placeholder="HH" step = "1" min = "0" max="23" autocomplete="off" style="width: 40px; height: 36px;border: 0px;text-align: right;" >:
+                    <input type="number" pattern ="[0-9]*" id = "myMM" placeholder="mm" step = "1" min = "0" max="59" autocomplete="off" style="width: 40PX;height: 36px;border: 0px;text-align: right;">:
+                    <input type="number" pattern ="[0-9]*" id = "mySS" placeholder="ss" step = "1" min = "0" max="59" autocomplete="off" style="width: 35PX;height: 36px;border: 0px;text-align: right;">
+                </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <div type="button" class="btn btn-primary" id="acceptTime" data-dismiss="modal" style=" margin: 10px;width: 70px;">Ok  <span class="glyphicon glyphicon-ok"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
      <div class="myModal" id="writeModal">
         <div class="modal-dialog" role="document">
            <div class="modal-content">
