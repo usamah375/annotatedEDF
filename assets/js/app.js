@@ -2553,6 +2553,9 @@ function readEEG() {
                 });
                 //EEGplotamp/montage_EEG_list.length*1/chmax*0.75
                 if (i==0){
+                  if (samp_start ==13){
+                    samp_start = 0;
+                  }
                   prev_length = channel.length;
                   samp_per_second = channel.length / window_duration;
                   samp_left = 13-(channel.length-samp_start)%13;
