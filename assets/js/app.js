@@ -2559,8 +2559,8 @@ function readEEG() {
                   samp_left = 13-(channel.length-samp_start)%13;
                   smp_left = 13 - ((channel.length / (window_duration))-samp_start)%13;
                 }
-                console.log(samp_start);
-                for (var i = samp_start; i < channel.length; i+=13) {
+                
+                for (var i = 0; i < channel.length; i++) {
 
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
                     EEG_plotdic[ch].y.push((channel[i] * invert_factor) + pos);
