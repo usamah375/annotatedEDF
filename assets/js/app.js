@@ -2563,7 +2563,7 @@ function readEEG() {
                 for (var i = 0; i < channel.length; i++) {
 
                     EEG_plotdic[ch].x.push((i / ch_dic[edf.ch].channel_sample_rates) + edf.initial_condition_start);
-                    EEG_plotdic[ch].y.push((channel[i] * invert_factor) + pos);
+                    EEG_plotdic[ch].y.push((channel[i]) + pos);
 
                 }
                 plotEEGdata.push(EEG_plotdic[ch]);
